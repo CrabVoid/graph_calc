@@ -9,18 +9,56 @@
     <h1>Taisnes vienādojums</h1>
     <br />
     <label for="input1">Punkts A =</label>
-    (<input type="text" id="" />; <input type="text" id="" />)
+    (<input type="text" id="input1.1" />; <input type="text" id="input1.2" />)
     <br />
     <br />
     <label for="input1">Punkts A =</label>
-    (<input type="text" id="" />; <input type="text" id="" />)
+    (<input type="text" id="input2.1" />; <input type="text" id="input2.2" />)
     <br />
     <button type="button" id="doMath">Analizēt</button>
     <p id="output"></p>
-    <br>
+    <br />
 
     <script>
-        
+      let int1 = document.getElementById("input1.1");
+      let int2 = document.getElementById("input1.2");
+      let int3 = document.getElementById("input2.1");
+      let int4 = document.getElementById("input2.2");
+      let Btn = document.getElementById("doMath");
+      let output = document.getElementById("output");
+
+      Btn.addEventListener("click", processInput);
+
+      function processInput() {
+        let int1Value = parseFloat(int1.value);
+        let int2Value = parseFloat(int2.value);
+        let int3Value = parseFloat(int3.value);
+        let int4Value = parseFloat(int4.value);
+
+        let koef = koefProccess(int1Value, int2Value, int3Value, int4Value);
+
+        let yIntercept = yInterceptCalc(koef, int1Value, int2Value);
+
+        let point1Calc = displayCalc(koef, yIntercept);
+
+        function koefProccess(i1, i2, i3, i4) {
+          let deltaX = i3 - i1;
+          let deltaY = i4 - i2;
+          let koef = deltaY / deltaX;
+          return koef;
+        }
+
+        function yInterceptCalc(k, i1, i2) {
+          let yIntercept = i2 - k * i1;
+          return yIntercept;
+        }
+
+        function displayCalc(k, b) {
+          return (y = k * x + b);
+        }
+
+        output.innerHTML = dispalyCalc;
+      }
     </script>
   </body>
 </html>

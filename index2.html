@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taisnes vienādojums</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      #chart-container {
+        max-width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Taisnes vienādojums</h1>
+
+    <p>
+      Punkts A = (
+      <span>
+        <input type="text" id="ax" placeholder="x" />
+        ;
+        <input type="text" id="ay" placeholder="y" />
+      </span>
+      )
+    </p>
+
+    <p>
+      Punkts B = (
+      <span>
+        <input type="text" id="bx" placeholder="x" />
+        ;
+        <input type="text" id="by" placeholder="y" />
+      </span>
+      )
+    </p>
+
+    <button>Analizēt</button>
+    <div id="output"></div>
+
+    <div id="chart-container">
+      <canvas id="my-chart"></canvas>
+    </div>
+
+    <script>
+      const btn = document.querySelector("button");
+      const axInput = document.getElementById("ax");
+      const ayInput = document.getElementById("ay");
+      const bxInput = document.getElementById("bx");
+      const byInput = document.getElementById("by");
+      const output = document.querySelector("#output");
+
+      let myChart;
+
+      btn.addEventListener("click", handleClick);
+
+      function handleClick() {
+        const pointA = { x: axInput.value, y: ayInput.value };
+        const pointB = { x: bxInput.value, y: byInput.value };
+
+        let result = calculateSlope(pointA, pointB);
+        output.innerHTML = `<span>y = ${result.k}x + ${result.b} </span>`;
+
+        drawChart(result, pointA, pointB);
+      }
+
+      function calculateSlope(pointA, pointB) {
+        const k = (pointB.y - pointA.y) / (pointB.x - pointA.x); // Slope
+        const b = pointA.y - k * pointA.x; // Y-intercept
+        return { k, b };
+      }
+
+      // Define your slope (k) and y-intercept (b)
+      // const k = 2; // Example slope
+      // const b = 1; // Example y-intercept
+
+      // // Generate data points for the line
+      // const xValues = [0, 1, 2, 3, 4, 5]; // x values
+      // const yValues = xValues.map((x) => k * x + b); // Calculate y values
+
+      function drawChart(result, pointA, pointB) {
+        if (myChart) myChart.destroy();
+        let k = parseFloat(result.k);
+        let b = parseFloat(result.b);
+
+        const xValues = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+        const yValues = xValues.map((x) => k * x + b); // Calculate Y values
+
+        // Create the chart
+        const ctx = document.getElementById("my-chart").getContext("2d");
+        myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: xValues, // x-axis labels
+            datasets: [
+              {
+                label: "y = " + k + "x + " + b,
+                data: yValues, // y values
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 2,
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: {
+                  drawBorder: true, // Draw the x-axis line
+                  color: "black", // Color of the x-axis line
+                },
+                ticks: {
+                  callback: function (value) {
+                    return value === 0 ? "0" : value; // Show 0 on the x-axis
+                  },
+                },
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  drawBorder: true, // Draw the y-axis line
+                  color: "black", // Color of the y-axis line
+                },
+                ticks: {
+                  callback: function (value) {
+                    return value === 0 ? "0" : value; // Show 0 on the y-axis
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
